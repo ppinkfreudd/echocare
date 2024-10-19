@@ -4,8 +4,13 @@ import AbstractBall from '../components/glob';
 import useVapi from '../hooks/use-vapi';
 import MicButton from '../components/MicButton';
 import { MicIcon, PhoneOff } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useAuth, SignInButton } from "@clerk/nextjs";
 import { motion } from 'framer-motion';
+
 const LandingPage: React.FC = () => {
+    const { isLoaded, isSignedIn } = useAuth();
+    const router = useRouter();
     const { volumeLevel, isSessionActive, toggleCall } = useVapi();
     const [config, setConfig] = useState({
       perlinTime: 50.0,
@@ -49,6 +54,20 @@ const LandingPage: React.FC = () => {
         }
       }
     }, [isSessionActive, volumeLevel]);
+
+    const handleDonateClick = () => {
+      if (!isLoaded) {
+        // Authentication is still loading, you might want to show a loading spinner here
+        return;
+      }
+
+      if (isSignedIn) {
+        // User is authenticated, navigate to the donation page
+        router.push('/businesspage_side/business_page');
+      }
+      // If not signed in, the SignInButton will handle the sign-in process
+    };
+  
     return (
       <div style={{ width: '100%', height: '100%' }}>
         <header className="w-full flex justify-center items-center h-1/4">
@@ -101,6 +120,22 @@ const LandingPage: React.FC = () => {
           {isSessionActive ? <PhoneOff size={18} /> : <MicIcon size={18} />}
         </MicButton>
         </div>
+        {isLoaded && (
+          isSignedIn ? (
+            <button 
+              className='absolute top-0 left-0 bg-blue-500 text-white p-2 rounded-md'
+              onClick={handleDonateClick}
+            >
+              Donate Food
+            </button>
+          ) : (
+            <SignInButton mode="modal">
+              <button className='absolute top-0 left-0 bg-blue-500 text-white p-2 rounded-md'>
+                Donate Food
+              </button>
+            </SignInButton>
+          )
+        )}
       </div>
     );
   };
