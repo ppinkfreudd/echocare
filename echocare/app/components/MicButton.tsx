@@ -1,9 +1,9 @@
 import React from 'react';
 import { MicIcon, PhoneOff } from 'lucide-react';
 
-interface MicButtonProps {
-  isActive: boolean;
-  onClick: () => void;
+interface MicButtonProps extends React.ComponentProps<"button"> {
+  children?: React.ReactNode;
+  isActive?: boolean;
 }
 
 const MicButton: React.FC<MicButtonProps> = ({ isActive, onClick }) => {

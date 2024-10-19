@@ -134,11 +134,11 @@ const AbstractBall: React.FC<any> = ({
         z: 300 - cameraZoom
       });
     }
-    gsap.to(uniformsRef.current.RGBr, { duration: 1, value: Math.random() * 10 });
-    gsap.to(uniformsRef.current.RGBg, { duration: 1, value: Math.random() * 10 });
-    gsap.to(uniformsRef.current.RGBb, { duration: 1, value: Math.random() * 10 });
-    gsap.to(uniformsRef.current.RGBn, { duration: 1, value: Math.random() * 2 });
-    gsap.to(uniformsRef.current.RGBm, { duration: 1, value: Math.random() * 5 });
+    gsap.to(uniformsRef.current.RGBr, { duration: 1, value: Math.random() * 5 }); // Reduced from 10 to 5
+    gsap.to(uniformsRef.current.RGBg, { duration: 1, value: Math.random() * 5 }); // Reduced from 10 to 5
+    gsap.to(uniformsRef.current.RGBb, { duration: 1, value: Math.random() * 5 }); // Reduced from 10 to 5
+    gsap.to(uniformsRef.current.RGBn, { duration: 1, value: Math.random() * 1 }); // Reduced from 2 to 1
+    gsap.to(uniformsRef.current.RGBm, { duration: 1, value: Math.random() * 2 }); // Reduced from 5 to 2
   }, [cameraZoom]);  
  
   return (
