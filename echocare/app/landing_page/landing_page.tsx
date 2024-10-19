@@ -1,17 +1,18 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import AbstractBall from '../components/glob';
+import Transcriber from '../components/Transcriber';
 import useVapi from '../hooks/use-vapi';
 import MicButton from '../components/MicButton';
 import { MicIcon, PhoneOff } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useAuth, SignInButton } from "@clerk/nextjs";
 import { useRouter } from 'next/navigation';
+import { useAuth, SignInButton } from "@clerk/nextjs";
 
 const LandingPage: React.FC = () => {
     const { isLoaded, isSignedIn } = useAuth();
     const router = useRouter();
-    const { volumeLevel, isSessionActive, toggleCall } = useVapi();
+    const { volumeLevel, isSessionActive, conversation, toggleCall } = useVapi();
     const [config, setConfig] = useState({
       perlinTime: 50.0,
       perlinDNoise: 1.0,
@@ -29,31 +30,22 @@ const LandingPage: React.FC = () => {
       cameraGuide: false,
       perlinMorph: 5.5,
     });
+
     useEffect(() => {
-      if (isSessionActive && volumeLevel > 0) {
+      if (isSessionActive) {
         setConfig(prevConfig => ({
           ...prevConfig,
           perlinTime: 100.0,
           perlinMorph: 25.0,
         }));
-      }
-      else{
-        if (isSessionActive) {
-          setConfig(prevConfig => ({
-            ...prevConfig,
-            perlinTime: 25.0,
-            perlinMorph: 10.0,
-          }));
-        }
-        else{
+      } else {
         setConfig(prevConfig => ({
           ...prevConfig,
           perlinTime: 5.0,
           perlinMorph: 0,
         }));
-        }
       }
-    }, [isSessionActive, volumeLevel]);
+    }, [isSessionActive]);
 
     const handleDonateClick = () => {
       if (isSignedIn) {
@@ -110,24 +102,30 @@ const LandingPage: React.FC = () => {
         </header>
         <AbstractBall {...config} />
         <div className="flex justify-center mt-4">
-        <MicButton onClick={toggleCall} className='m-2'>
-          {isSessionActive ? <PhoneOff size={18} /> : <MicIcon size={18} />}
-        </MicButton>
+          <MicButton onClick={toggleCall} className='m-2'>
+            {isSessionActive ? <PhoneOff size={18} /> : <MicIcon size={18} />}
+          </MicButton>
         </div>
-        
+
+        <Transcriber conversation={conversation} />
+
         {isLoaded && (
-          <div className="absolute top-4 right-4">
-            {isSignedIn ? (
-              <button
-                onClick={handleDonateClick}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Donate Food
+          isSignedIn ? (
+            <button
+              className='absolute top-0 left-0 bg-blue-500 text-white p-2 rounded-md'
+              onClick={handleDonateClick}
+            >
+              Donate Food
+            </button>
+          ) : (
+            <SignInButton mode="modal">
+              <button className='absolute top-0 left-0 bg-blue-500 text-white p-2 rounded-md'>
+                Restaurants, Prevent Food Wastage. Donate Food Now.
               </button>
             ) : (
-              <SignInButton mode="modal" afterSignInUrl="/businesspage_side/business_page">
+              <SignInButton mode="modal" afterSignInUrl="/businesspage_side">
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Donate Food
+                  Restaurants, Prevent Food Wastage. Donate Food Now.
                 </button>
               </SignInButton>
             )}
