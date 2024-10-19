@@ -61,6 +61,9 @@ const LandingPage: React.FC = () => {
           {isSessionActive ? <PhoneOff size={18} /> : <MicIcon size={18} />}
         </MicButton>
         </div>
+        <button className='absolute top-0 left-0 bg-blue-500 text-white p-2 rounded-md'>
+          Donate Food
+        </button>
       </div>
     );
   };
