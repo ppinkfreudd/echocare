@@ -102,7 +102,7 @@ const LandingPage: React.FC = () => {
         </header>
         <AbstractBall {...config} />
         <div className="flex justify-center mt-4">
-          <MicButton onClick={toggleCall} className='m-2'>
+          <MicButton onClick={toggleCall}>
             {isSessionActive ? <PhoneOff size={18} /> : <MicIcon size={18} />}
           </MicButton>
         </div>
@@ -118,18 +118,12 @@ const LandingPage: React.FC = () => {
               Restaurants, End Food Waste. Donate Food Now.
             </button>
           ) : (
-            <SignInButton mode="modal">
-              <button className='absolute top-0 left-0 bg-blue-500 text-white p-2 rounded-md'>
+            <SignInButton mode="modal" afterSignInUrl="/businesspage_side">
+              <button className="absolute top-0 left-0 bg-blue-500 text-white p-2 rounded-md">
                 Restaurants, Prevent Food Wastage. Donate Food Now.
               </button>
-            ) : (
-              <SignInButton mode="modal" afterSignInUrl="/businesspage_side">
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Restaurants, Prevent Food Wastage. Donate Food Now.
-                </button>
-              </SignInButton>
-            )}
-          </div>
+            </SignInButton>
+          )
         )}
       </div>
     );
