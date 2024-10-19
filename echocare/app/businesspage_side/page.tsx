@@ -16,7 +16,7 @@ interface DonationItem {
   photo_url?: string;
 }
 
-const BusinessPage: React.FC = () => {
+const page: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [donations, setDonations] = useState<DonationItem[]>([]);
 
@@ -124,4 +124,4 @@ const BusinessPage: React.FC = () => {
   );
 };
 
-export default BusinessPage;
+export default page;
