@@ -55,7 +55,7 @@ const LandingPage: React.FC = () => {
 
       if (isSignedIn) {
         // User is authenticated, navigate to the donation page
-        router.push('/businesspage_side/business_page');
+        router.push('/businesspage_side');
       }
       // If not signed in, the SignInButton will handle the sign-in process
     };
@@ -121,7 +121,7 @@ const LandingPage: React.FC = () => {
               className='absolute top-0 left-0 bg-blue-500 text-white p-2 rounded-md'
               onClick={handleDonateClick}
             >
-              Donate Food
+              Restaurants, End Food Waste. Donate Food Now.
             </button>
           ) : (
             <SignInButton mode="modal">
