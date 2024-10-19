@@ -5,6 +5,7 @@ import { Button as MovingBorderButton } from '../components/ui/moving-border';
 import FoodDonationForm from '../components/form';
 import { Modal, Card, Row, Col, Image, message } from 'antd';
 import { addDonation, getDonations } from '../actions';
+import { useUser } from "@clerk/nextjs";
 
 interface DonationItem {
   id: number;
@@ -16,7 +17,8 @@ interface DonationItem {
   photo_url?: string;
 }
 
-const page: React.FC = () => {
+const Page: React.FC = () => {
+  const { user } = useUser();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [donations, setDonations] = useState<DonationItem[]>([]);
 
@@ -65,7 +67,7 @@ const page: React.FC = () => {
       <div className="container mx-auto px-4 py-10">
         <div className='flex flex-col items-center mt-10 mb-16'>
           <h1 className='text-4xl md:text-5xl font-bold text-center mb-8'>
-            Welcome, Sajj Mediterranean
+            Welcome, {user ? user.fullName || user.username || 'User' : 'User'}
           </h1>
           <p className="text-xl text-center mb-10 text-gray-300">
             Ready to donate some food? Click the button below to get started!
@@ -124,4 +126,4 @@ const page: React.FC = () => {
   );
 };
 
-export default page;
+export default Page;
