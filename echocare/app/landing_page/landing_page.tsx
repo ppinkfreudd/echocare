@@ -48,14 +48,8 @@ const LandingPage: React.FC = () => {
     }, [isSessionActive]);
 
     const handleDonateClick = () => {
-      if (!isLoaded) {
-        // Authentication is still loading, you might want to show a loading spinner here
-        return;
-      }
-
       if (isSignedIn) {
-        // User is authenticated, navigate to the donation page
-        router.push('/businesspage_side/business_page');
+        router.push('/businesspage_side');
       }
       // If not signed in, the SignInButton will handle the sign-in process
     };
@@ -126,13 +120,19 @@ const LandingPage: React.FC = () => {
           ) : (
             <SignInButton mode="modal">
               <button className='absolute top-0 left-0 bg-blue-500 text-white p-2 rounded-md'>
-                Donate Food
+                Restaurants, Prevent Food Wastage. Donate Food Now.
               </button>
-            </SignInButton>
-          )
+            ) : (
+              <SignInButton mode="modal" afterSignInUrl="/businesspage_side">
+                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                  Restaurants, Prevent Food Wastage. Donate Food Now.
+                </button>
+              </SignInButton>
+            )}
+          </div>
         )}
       </div>
     );
   };
 
-  export default LandingPage;
+export default LandingPage;
