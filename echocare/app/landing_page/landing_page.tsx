@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import AbstractBall from '../components/glob';
 import Transcriber from '../components/Transcriber';
 import useVapi from '../hooks/use-vapi';
@@ -8,11 +8,14 @@ import { MicIcon, PhoneOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useAuth, SignInButton } from "@clerk/nextjs";
+import { identifyFoodSafety } from '../components/gemini-food-vision';  
 
 const LandingPage: React.FC = () => {
     const { isLoaded, isSignedIn } = useAuth();
     const router = useRouter();
     const { volumeLevel, isSessionActive, conversation, toggleCall } = useVapi();
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [foodSafetyResult, setFoodSafetyResult] = useState<string | null>(null);
     const [config, setConfig] = useState({
       perlinTime: 50.0,
       perlinDNoise: 1.0,
@@ -51,7 +54,24 @@ const LandingPage: React.FC = () => {
       if (isSignedIn) {
         router.push('/businesspage_side');
       }
-      // If not signed in, the SignInButton will handle the sign-in process
+    };
+
+    const handleIdentifyFoodSafety = () => {
+      fileInputRef.current?.click();
+    };
+
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        try {
+          setFoodSafetyResult("Analyzing image...");
+          const result = await identifyFoodSafety(file);
+          setFoodSafetyResult(result);
+        } catch (error) {
+          console.error('Error identifying food safety:', error);
+          setFoodSafetyResult('An error occurred while analyzing the image.');
+        }
+      }
     };
 
     return (
@@ -110,20 +130,45 @@ const LandingPage: React.FC = () => {
         <Transcriber conversation={conversation} />
 
         {isLoaded && (
-          isSignedIn ? (
-            <button
-              className='absolute top-0 left-0 bg-blue-500 text-white p-2 rounded-md'
-              onClick={handleDonateClick}
-            >
-              Restaurants, End Food Waste. Donate Food Now.
-            </button>
-          ) : (
-            <SignInButton mode="modal" afterSignInUrl="/businesspage_side">
-              <button className="absolute top-0 left-0 bg-blue-500 text-white p-2 rounded-md">
-                Restaurants, Prevent Food Wastage. Donate Food Now.
+          <div className="absolute top-4 left-4">
+            {isSignedIn ? (
+              <button
+                className='bg-blue-500 text-white p-2 rounded-md'
+                onClick={handleDonateClick}
+              >
+                Restaurants, End Food Waste. Donate Food Now.
               </button>
-            </SignInButton>
-          )
+            ) : (
+              <SignInButton mode="modal" afterSignInUrl="/businesspage_side">
+                <button className="bg-blue-500 text-white p-2 rounded-md">
+                  Restaurants, Prevent Food Wastage. Donate Food Now.
+                </button>
+              </SignInButton>
+            )}
+          </div>
+        )}
+
+        <div className="absolute top-4 right-4">
+          <button 
+            onClick={handleIdentifyFoodSafety}
+            className="bg-green-500 text-white p-2 rounded-md"
+          >
+            Identify Food Safety
+          </button>
+          <input 
+            type="file"
+            ref={fileInputRef}
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+            accept="image/*"
+          />
+        </div>
+
+        {foodSafetyResult && (
+          <div className="absolute bottom-4 left-4 right-4 bg-white text-black p-4 rounded-md max-h-60 overflow-y-auto">
+            <h3 className="font-bold mb-2">Food Safety Analysis:</h3>
+            <p>{foodSafetyResult}</p>
+          </div>
         )}
       </div>
     );

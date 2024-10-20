@@ -2,7 +2,7 @@ import React from 'react';
 
 interface MicButtonProps {
   onClick: () => void;
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }
 
 const MicButton: React.FC<MicButtonProps> = ({ onClick, children }) => {
