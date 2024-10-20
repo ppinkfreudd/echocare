@@ -16,7 +16,6 @@ interface TranscriberProps {
 const Transcriber: React.FC<TranscriberProps> = ({ conversation }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { getDirections, getCurrentLocation } = useVapi();
-  const [mapUrl, setMapUrl] = useState<string | null>(null); // To store the dynamic map URL
   const [directionsText, setDirectionsText] = useState<string[]>([]); // To display step-by-step directions
 
   useEffect(() => {
@@ -56,14 +55,14 @@ const Transcriber: React.FC<TranscriberProps> = ({ conversation }) => {
       const parts = combinedText.split(urlRegex);
       lastMessage.text = parts.map((part, index) =>
         urlRegex.test(part) ? <a key={index} href={part} target="_blank" rel="noopener noreferrer">{part}</a> : part
-      );
+      ).join(''); // Convert the array to a string
     } else {
       const parts = message.text.split(urlRegex);
       acc.push({
         role: message.role,
         text: parts.map((part, index) =>
           urlRegex.test(part) ? <a key={index} href={part} target="_blank" rel="noopener noreferrer">{part}</a> : part
-        ),
+        ).join(''), // Convert the array to a string
       });
     }
     return acc;
@@ -76,11 +75,6 @@ const Transcriber: React.FC<TranscriberProps> = ({ conversation }) => {
       if (directions) {
         const { distance, duration, steps } = directions;
 
-        // Generate the map URL
-        const mapUrl = `https://www.google.com/maps/embed/v1/directions?key=AIzaSyCHyK3WRMnFUphAccHwVPWAjNuBUZd4sJI
-        &origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&mode=driving`;
-        setMapUrl(mapUrl); // Set the map URL to embed the map
-
         // Update the directions text
         setDirectionsText([`Distance: ${distance}`, `Duration: ${duration}`, ...steps]);
       } else {
@@ -91,52 +85,23 @@ const Transcriber: React.FC<TranscriberProps> = ({ conversation }) => {
     }
   };
 
-  useEffect(() => {
-    const loadGoogleMapsScript = () => {
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places`;
-      script.async = true;
-      script.defer = true;
-      document.body.appendChild(script);
-    };
-
-    loadGoogleMapsScript();
-  }, []);
-
   return (
-    <div ref={scrollRef} className="h-60 overflow-y-auto p-4 bg-gray-100 rounded-lg">
-      {groupedConversation.map((message, index) => {
-        const messageText = Array.isArray(message.text) ? message.text.join('') : message.text;
-        return (
-          <div key={index} className={`message ${message.role}`}>
-            {message.role === 'system' ? (
-              messageText.startsWith("User's current location:") ? (
-                <i>
-                  Your current location: {messageText.replace("User's current location:", '')}
-                </i>
-              ) : (
-                <i>{messageText}</i>
-              )
+    <div ref={scrollRef} className="h-60 overflow-y-auto p-4 bg-slate-700 rounded-lg">
+      {groupedConversation.map((message, index) => (
+        <div key={index} className={`message ${message.role}`}>
+          {message.role === 'system' ? (
+            message.text.startsWith("User's current location:") ? (
+              <i>
+                Your current location: {message.text.replace("User's current location:", '')}
+              </i>
             ) : (
               <>{renderWords(message.text)}</>
-            )}
-          </div>
-        );
-      })}
-
-      {/* Conditionally render the map if mapUrl is available */}
-      {mapUrl && (
-        <div className="mt-4">
-          <iframe
-            title="Map"
-            src={mapUrl}
-            width="100%"
-            height="300"
-            allowFullScreen
-            loading="lazy"
-          ></iframe>
+            )
+          ) : (
+            <>{renderWords(message.text)}</>
+          )}
         </div>
-      )}
+      ))}
 
       {/* Display step-by-step directions */}
       {directionsText.length > 0 && (
