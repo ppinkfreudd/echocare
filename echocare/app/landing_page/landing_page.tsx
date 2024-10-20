@@ -63,7 +63,7 @@ const LandingPage: React.FC = () => {
             transition={{ duration: 1 }}
             className="text-center"
           >
-            <h1 className="text-4xl font-bold text-black mb-4">
+            <h1 className="text-6xl font-bold mb-8 bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text">
               {"Welcome to EchoCare".split("").map((char, index) => (
                 <motion.span
                   key={index}
@@ -110,17 +110,13 @@ const LandingPage: React.FC = () => {
         <Transcriber conversation={conversation} />
 
         {isLoaded && (
-          isSignedIn ? (
-            <button
-              className='absolute top-0 left-0 bg-blue-500 text-white p-2 rounded-md'
-              onClick={handleDonateClick}
-            >
-              Restaurants, End Food Waste. Donate Food Now.
-            </button>
-          ) : (
-            <SignInButton mode="modal">
-              <button className='absolute top-0 left-0 bg-blue-500 text-white p-2 rounded-md'>
-                Restaurants, Prevent Food Wastage. Donate Food Now.
+          <div className="absolute top-0 left-0">
+            {isSignedIn ? (
+              <button
+                className="bg-blue-500 text-white p-2 rounded-md"
+                onClick={handleDonateClick}
+              >
+                Restaurants, End Food Waste. Donate Food Now.
               </button>
             ) : (
               <SignInButton mode="modal" afterSignInUrl="/businesspage_side">
