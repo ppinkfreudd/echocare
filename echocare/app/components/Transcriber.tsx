@@ -91,24 +91,38 @@ const Transcriber: React.FC<TranscriberProps> = ({ conversation }) => {
     }
   };
 
+  useEffect(() => {
+    const loadGoogleMapsScript = () => {
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places`;
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+    };
+
+    loadGoogleMapsScript();
+  }, []);
+
   return (
     <div ref={scrollRef} className="h-60 overflow-y-auto p-4 bg-gray-100 rounded-lg">
-      {conversation.map((message, index) => (
-        <div key={index} className={`message ${message.role}`}>
-          {message.role === 'system' ? (
-            message.text.startsWith("User's current location:") ? (
-              <i>
-                Your current location: {message.text.replace("User's current location:", '')}
-              </i>
+      {groupedConversation.map((message, index) => {
+        const messageText = Array.isArray(message.text) ? message.text.join('') : message.text;
+        return (
+          <div key={index} className={`message ${message.role}`}>
+            {message.role === 'system' ? (
+              messageText.startsWith("User's current location:") ? (
+                <i>
+                  Your current location: {messageText.replace("User's current location:", '')}
+                </i>
+              ) : (
+                <i>{messageText}</i>
+              )
             ) : (
-              <i>{message.text}</i>
-            )
-          ) : (
-            <>{message.text}</>
-          )}
-        </div>
-      ))}
-
+              <>{renderWords(message.text)}</>
+            )}
+          </div>
+        );
+      })}
 
       {/* Conditionally render the map if mapUrl is available */}
       {mapUrl && (

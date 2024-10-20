@@ -100,7 +100,15 @@ const LandingPage: React.FC = () => {
             </p>
           </motion.div>
         </header>
-        <AbstractBall {...config} />
+        
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1 }}
+        >
+          <AbstractBall {...config} />
+        </motion.div>
+
         <div className="flex justify-center mt-4">
           <MicButton onClick={toggleCall} className='m-2'>
             {isSessionActive ? <PhoneOff size={18} /> : <MicIcon size={18} />}
