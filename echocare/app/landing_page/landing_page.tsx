@@ -9,6 +9,8 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useAuth, SignInButton } from "@clerk/nextjs";
 import { identifyFoodSafety } from '../components/gemini-food-vision';  
+import Ripple from '../components/ui/Ripple';
+import RainbowButton from '../components/ui/RainbowButton';
 
 const LandingPage: React.FC = () => {
     const { isLoaded, isSignedIn } = useAuth();
@@ -83,7 +85,7 @@ const LandingPage: React.FC = () => {
             transition={{ duration: 1 }}
             className="text-center"
           >
-            <h1 className="text-6xl font-bold mb-8 bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text">
+            <h1 className="mt-10 text-6xl font-bold mb-8 bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text">
               {"Welcome to EchoCare".split("").map((char, index) => (
                 <motion.span
                   key={index}
@@ -95,7 +97,7 @@ const LandingPage: React.FC = () => {
                 </motion.span>
               ))}
             </h1>
-            <p className="text-xl text-black">
+            <p className="text-xl text-white">
               {"The most accessible food bank network.".split("").map((char, index) => (
                 <motion.span
                   key={index}
@@ -120,41 +122,46 @@ const LandingPage: React.FC = () => {
             </p>
           </motion.div>
         </header>
-        <AbstractBall {...config} />
-        <div className="flex justify-center mt-4">
-          <MicButton onClick={toggleCall}>
-            {isSessionActive ? <PhoneOff size={18} /> : <MicIcon size={18} />}
-          </MicButton>
+        <div className='mt-[-30px] relative'>
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1 }}
+          >
+            <AbstractBall {...config} className='z-10'/>
+          </motion.div>
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 z-20 pointer-events-auto">
+            <div className="bg-blue-500 rounded-full animate-pulse p-2 mt-[-60px] w-10 h-10">
+              <MicButton onClick={toggleCall}>
+                {isSessionActive ? <PhoneOff size={22} /> : <MicIcon size={22} />}
+              </MicButton>
+            </div>
+          </div>
         </div>
-
+        <Ripple />
+ 
         <Transcriber conversation={conversation} />
 
         {isLoaded && (
           <div className="absolute top-4 left-4">
             {isSignedIn ? (
-              <button
-                className='bg-blue-500 text-white p-2 rounded-md'
-                onClick={handleDonateClick}
-              >
-                Restaurants, End Food Waste. Donate Food Now.
-              </button>
+              <RainbowButton onClick={handleDonateClick}>
+                For Restaurants
+              </RainbowButton>
             ) : (
               <SignInButton mode="modal" afterSignInUrl="/businesspage_side">
-                <button className="bg-blue-500 text-white p-2 rounded-md">
-                  Restaurants, Prevent Food Wastage. Donate Food Now.
-                </button>
+                <RainbowButton>
+                  For Restaurants
+                </RainbowButton>
               </SignInButton>
             )}
           </div>
         )}
 
         <div className="absolute top-4 right-4">
-          <button 
-            onClick={handleIdentifyFoodSafety}
-            className="bg-green-500 text-white p-2 rounded-md"
-          >
-            Identify Food Safety
-          </button>
+          <RainbowButton onClick={handleIdentifyFoodSafety}>
+            A.I. Food Safety Check
+          </RainbowButton>
           <input 
             type="file"
             ref={fileInputRef}

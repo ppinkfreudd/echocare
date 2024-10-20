@@ -92,7 +92,7 @@ const Transcriber: React.FC<TranscriberProps> = ({ conversation }) => {
   };
 
   return (
-    <div ref={scrollRef} className="h-60 overflow-y-auto p-4 bg-gray-100 rounded-lg">
+    <div ref={scrollRef} className="h-60 overflow-y-auto p-4 bg-slate-700 rounded-lg">
       {conversation.map((message, index) => (
         <div key={index} className={`message ${message.role}`}>
           {message.role === 'system' ? (

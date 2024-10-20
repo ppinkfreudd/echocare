@@ -7,7 +7,7 @@ interface MicButtonProps {
 
 const MicButton: React.FC<MicButtonProps> = ({ onClick, children }) => {
   return (
-    <button onClick={onClick} className="m-2">
+    <button onClick={onClick} className="focus:outline-none">
       {children}
     </button>
   );
