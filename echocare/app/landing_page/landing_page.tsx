@@ -210,7 +210,7 @@ const LandingPage: React.FC = () => {
  
         <Transcriber conversation={conversation} />
 
-        {isLoaded && (
+        {isLoaded ? (
           <div className="absolute top-4 left-4">
             {isSignedIn ? (
               <RainbowButton onClick={handleDonateClick}>
@@ -224,58 +224,56 @@ const LandingPage: React.FC = () => {
               </SignInButton>
             )}
           </div>
+        ) : (
+          <div className="absolute top-4 left-4">
+            <RainbowButton disabled>
+              Loading...
+            </RainbowButton>
+          </div>
         )}
 
         <LoadScriptNext
-          googleMapsApiKey="AIzaSyCHyK3WRMnFUphAccHwVPWAjNuBUZd4sJI" // replace with your actual API key
-          libraries={['places']} // ensure 'places' library is loaded
+          googleMapsApiKey="AIzaSyCHyK3WRMnFUphAccHwVPWAjNuBUZd4sJI"
+          libraries={['places']}
           loadingElement={<div>Loading...</div>}
         >
-          <div className="absolute top-4 right-4">
-            <RainbowButton onClick={handleIdentifyFoodSafety}>
-              A.I. Food Safety Check
-            </RainbowButton>
-            <input 
-              type="file"
-              ref={fileInputRef}
-              style={{ display: 'none' }}
-              onChange={handleFileChange}
-              accept="image/*"
-            />
-          </div>
-
-          
-
-          {foodSafetyResult && (
-            <div className="absolute bottom-4 left-4 right-4 bg-white text-black p-4 rounded-md max-h-60 overflow-y-auto">
-              <h3 className="font-bold mb-2">Food Safety Analysis:</h3>
-              <p>{foodSafetyResult}</p>
-            </div>
-          )}
-
-
-          <div className="absolute bottom-[60%] right-4 p-4 bg-slate-800 rounded-lg shadow-lg">
-            <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-              <input
-                type="text"
-                placeholder="Enter a destination"
-                className="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-700 text-white"
-                style={{ width: '300px' }} // Removed margin to reduce gap between input and map
+          <>
+            <div className="absolute top-4 right-4">
+              <RainbowButton onClick={handleIdentifyFoodSafety}>
+                A.I. Food Safety Check
+              </RainbowButton>
+              <input 
+                type="file"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+                accept="image/*"
               />
-            </Autocomplete>
-          </div>
+            </div>
 
-          <div className="absolute bottom-[20%] right-4 opacity-[80%] rounded-lg shadow-lg overflow-hidden">
-            <GoogleMap
-              mapContainerStyle={mapContainerStyle}
-              center={center}
-              zoom={10}
-              options={{styles: darkModeStyle}}
-            >
-              <Marker position={center} />
-              {destination && <Marker position={destination} />}
-            </GoogleMap>
-          </div>
+            <div className="absolute bottom-[60%] right-4 p-4 bg-slate-800 rounded-lg shadow-lg">
+              <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+                <input
+                  type="text"
+                  placeholder="Enter a destination"
+                  className="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-700 text-white"
+                  style={{ width: '300px' }} // Removed margin to reduce gap between input and map
+                />
+              </Autocomplete>
+            </div>
+
+            <div className="absolute bottom-[20%] right-4 opacity-[80%] rounded-lg shadow-lg overflow-hidden">
+              <GoogleMap
+                mapContainerStyle={mapContainerStyle}
+                center={center}
+                zoom={10}
+                options={{styles: darkModeStyle}}
+              >
+                <Marker position={center} />
+                {destination && <Marker position={destination} />}
+              </GoogleMap>
+            </div>
+          </>
         </LoadScriptNext>
       </div>
     );
