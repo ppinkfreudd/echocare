@@ -1,13 +1,13 @@
 import React from 'react';
 
-interface MicButtonProps extends React.ComponentProps<"button"> {
-  children?: React.ReactNode;
-  isActive?: boolean;
+interface MicButtonProps {
+  onClick: () => void;
+  children: React.ReactNode;
 }
 
-const MicButton: React.FC<MicButtonProps> = ({ onClick, className, children }) => {
+const MicButton: React.FC<MicButtonProps> = ({ onClick, children }) => {
   return (
-    <button onClick={onClick} className={className}>
+    <button onClick={onClick} className="m-2">
       {children}
     </button>
   );
