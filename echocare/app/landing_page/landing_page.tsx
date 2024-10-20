@@ -83,7 +83,7 @@ const LandingPage: React.FC = () => {
             transition={{ duration: 1 }}
             className="text-center"
           >
-            <h1 className="text-4xl font-bold text-black mb-4">
+            <h1 className="text-6xl font-bold mb-8 bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text">
               {"Welcome to EchoCare".split("").map((char, index) => (
                 <motion.span
                   key={index}
