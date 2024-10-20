@@ -86,6 +86,7 @@ const LandingPage: React.FC = () => {
       getUserLocation();
     }, []);
 
+    // Ensure any client-side only logic is wrapped in useEffect
     useEffect(() => {
       if (isSessionActive) {
         setConfig(prevConfig => ({

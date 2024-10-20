@@ -27,6 +27,20 @@ const useVapi = () => {
           if (address) {
             locationMessage = `User's current location: ${address}`;
             
+            // Send the current address to the Vapi conversation
+            vapiInstance.send({
+              type: "add-message",
+              message: {
+                role: 'system',
+                content: locationMessage
+              }
+            });
+
+            setConversation((prev) => [
+              ...prev,
+              { role: 'system', text: locationMessage },
+            ]);
+
             // Query Google Places API to find suitable places nearby
             const nearbyPlaces = await findNearbyPlaces(currentLocation);
             if (nearbyPlaces && nearbyPlaces.length > 0) {
