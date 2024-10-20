@@ -251,6 +251,14 @@ const LandingPage: React.FC = () => {
               />
             </div>
 
+            {foodSafetyResult && (
+              <div className="absolute bottom-4 left-4 right-4 bg-white text-black p-4 rounded-md max-h-60 overflow-y-auto">
+                <h3 className="font-bold mb-2">Food Safety Analysis:</h3>
+                <p>{foodSafetyResult}</p>
+              </div>
+            )}
+      
+
             <div className="absolute bottom-[60%] right-4 p-4 bg-slate-800 rounded-lg shadow-lg">
               <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
                 <input
